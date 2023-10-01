@@ -1,4 +1,5 @@
 import torch
+import argparse
 import numpy as np
 from typing import List, Dict, Union, Tuple
 from .utils import *
@@ -228,19 +229,20 @@ class MIMODataGenerator:
         return XAS, XRF, Y, YFRFr, YWRFr, bestAntennas, subSetA, Z
     
 if __name__ == "__main__":
-    # Define options
-    opts = {
-        'Nt_param': 16,  # number of Tx antennas
-        'Nray_param': 4,  # number of rays for each user
-        'Ncl_param': 4,  # number of clusters
-        'angspread': 5,  # angle spread of users
-        'selectOutputAsPhases': 1,
-        'snr_param': 0,  # SNR in dB
-        'Ns_param': [2],  # number of data streams
-        'Nreal': 100,  # number of realizations
-        'Nchannels': 10,  # number of channel matrices for the input data
-        'noiseLevelHdB': [15, 20, 25]  # dB
-    }
+    parser = argparse.ArgumentParser(description='Generate MIMO dataset.')
+    parser.add_argument('--Nt_param', type=int, default=16, help='Number of Tx antennas')
+    parser.add_argument('--Nray_param', type=int, default=4, help='Number of rays for each user')
+    parser.add_argument('--Ncl_param', type=int, default=4, help='Number of clusters')
+    parser.add_argument('--angspread', type=int, default=5, help='Angle spread of users')
+    parser.add_argument('--selectOutputAsPhases', type=int, default=1, help='Output phases or not')
+    parser.add_argument('--snr_param', type=int, default=0, help='SNR in dB')
+    parser.add_argument('--Ns_param', type=int, nargs='+', default=[2], help='Number of data streams')
+    parser.add_argument('--Nreal', type=int, default=100, help='Number of realizations')
+    parser.add_argument('--Nchannels', type=int, default=10, help='Number of channel matrices for the input data')
+    parser.add_argument('--noiseLevelHdB', type=int, nargs='+', default=[15, 20, 25], help='Noise level in dB')
+    args = parser.parse_args()
+
+    opts = vars(args) # Convert args to dictionary
 
     # Initialize the MIMODataGenerator
     mimo_gen = MIMODataGenerator(Nr=16, Nrs=16, NrRF=4, NtRF=4, opts=opts)
@@ -248,7 +250,7 @@ if __name__ == "__main__":
     # Generate the MIMO data
     XAS, XRF, Y, YFRFr, YWRFr, bestAntennas, subSetA, Z = mimo_gen.generateMIMO()
 
-    # For example, to save using torch.save:
+    # Save the data
     torch.save({
         'XAS': XAS,
         'XRF': XRF,
