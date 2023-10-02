@@ -8,8 +8,21 @@ The first unofficial PyTorch implementation of a paper with the titled "CNN-Base
 Clone the repository and install the required packages.
 
 ```bash
-git clone https://github.com/yourusername/CNNmmWave-PyTorch.git
+# Clone this repo
+git clone https://github.com/ravialdy/CNNmmWave-PyTorch.git
 cd CNNmmWave-PyTorch
+
+# Create a conda environment
+conda create -y -n cnnmmwave python=3.8
+
+# Activate the environment
+conda activate cnnmmwave
+
+# Install torch and torchvision
+# Please refer to https://pytorch.org/ if you need a different cuda version
+conda install pytorch==1.12.1 torchvision==0.13.1 cudatoolkit=11.6 -c pytorch -c conda-forge
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
